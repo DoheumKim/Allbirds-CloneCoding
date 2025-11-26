@@ -1,25 +1,34 @@
-D:.
+루트 폴더
 │  README.md
-│  tree.txt
 │
 ├─backend
-│  │  package.json          <-- 프로젝트 의존성/스크립트 설정 (수정함)
+│  │  package.json          <-- 프로젝트 의존성/스크립트 설정
 │  │  package-lock.json
 │  │
-│  ├─mongo                  <-- DB 테스트 스크립트 (수정함)
+│  ├─mongo                  <-- DB 테스트 스크립트
 │  │      playground-1.mongodb.js
 │  │      playground-2.mongodb.js
 │  │      playground-3.mongodb.js
 │  │      test.json
 │  │
-│  ├─src                    <-- [핵심] 백엔드 소스 코드 (수정함)
+│  ├─src                    <-- 백엔드 소스 코드
 │  │  │  app.js
+│  │  │
+│  │  ├─api                 <-- 외부 API 연동 관련
+│  │  │      axiosInstance.js
+│  │  │      productApi.js
 │  │  │
 │  │  ├─config
 │  │  │      db.js
 │  │  │
 │  │  ├─controllers
+│  │  │      adminController.js
+│  │  │      cartController.js
+│  │  │      orderController.js
+│  │  │      productController.js
 │  │  │      userController.js
+│  │  │
+│  │  ├─data                <-- 데이터 관련 폴더
 │  │  │
 │  │  ├─middleware
 │  │  │      authMiddleware.js
@@ -31,31 +40,53 @@ D:.
 │  │  │      User.js
 │  │  │
 │  │  ├─routes
+│  │  │      adminRoutes.js
+│  │  │      cartRoutes.js
 │  │  │      orderRoutes.js
 │  │  │      productRoutes.js
 │  │  │      userRoutes.js
 │  │  │
+│  │  ├─services            <-- 비즈니스 로직 분리
+│  │  │      externalProductService.js
+│  │  │
 │  │  └─utils
 │  │          AutoIncrement.js
+│  │          rankingCalculator.js
 │  │
 │  └─node_modules           <-- (라이브러리 폴더: 숨김 처리됨)
 │
-├─docs                      <-- 프로젝트 문서 (수정함)
+├─docs                      <-- 프로젝트 문서(교수님이 제작한 파일이라 볼 수 없음)
 │      2025텀프로젝트 수정.pptx - 바로 가기.lnk
 │      2025텀프로젝트.pptx - 바로 가기.lnk
 │      MongoDB.pptx
 │
-└─frontend(React로 대체)
-    │  index.html           <-- 메인 페이지 (수정함)
-    │  style.css            <-- 전역 스타일 (수정함)
+└─frontend                  <-- 미완성
+    │  .env                 <-- 환경 변수 
+    │  index.html           <-- 메인 페이지
+    │  package.json
+    │  tailwind.config.js   <-- Tailwind CSS 설정 
+    │  vite.config.ts       <-- Vite 빌드 설정 
+    │  tsconfig.json
     │
-    ├─public                <-- 정적 리소스 폴더
-    └─src                   <-- [핵심] 프론트엔드 소스 코드 (폴더 구조)
-        ├─api
-        ├─assets
-        ├─components
-        ├─context
-        ├─hooks
-        ├─pages
-        ├─routes
-        └─styles
+    ├─public                <-- 정적 리소스 폴더 (img, svg 등)
+    │
+    └─src                   <-- 프론트엔드 소스 코드
+        │  App.tsx
+        │  index.css
+        │  index.tsx
+        │
+        ├─components        <-- 재사용 가능한 컴포넌트
+        │  │  AnnouncementBanner.tsx
+        │  │  FloatingButton.tsx
+        │  │  ProductCard.tsx
+        │  │  SaeModal.tsx
+        │  │
+        │  └─CartDrawer
+        │
+        └─sections          <-- 페이지 섹션별 컴포넌트 구분
+            ├─Footer
+            ├─Header
+            ├─Hero
+            ├─MaterialsSection
+            ├─NewsLetterSection
+            └─TrendingSection
