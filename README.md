@@ -1,8 +1,8 @@
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-A full-stack Allbirds clone built with the MERN Stack(MongoDB, Express, React, Node.js).
-MERN Stack을 활용한 Allbirds 쇼핑몰 풀스택 클론 코딩.
-Current backend only implementation
+A full-stack Allbirds clone built with the MERN Stack(MongoDB, Express, React, Node.js).<br>
+MERN Stack을 활용한 Allbirds 쇼핑몰 풀스택 클론 코딩.<br>
+Current backend only implementation<br>
 현재 백엔드만 구현한 상태
 
 
