@@ -1,0 +1,61 @@
+D:.
+│  README.md
+│  tree.txt
+│
+├─backend
+│  │  package.json          <-- 프로젝트 의존성/스크립트 설정 (수정함)
+│  │  package-lock.json
+│  │
+│  ├─mongo                  <-- DB 테스트 스크립트 (수정함)
+│  │      playground-1.mongodb.js
+│  │      playground-2.mongodb.js
+│  │      playground-3.mongodb.js
+│  │      test.json
+│  │
+│  ├─src                    <-- [핵심] 백엔드 소스 코드 (수정함)
+│  │  │  app.js
+│  │  │
+│  │  ├─config
+│  │  │      db.js
+│  │  │
+│  │  ├─controllers
+│  │  │      userController.js
+│  │  │
+│  │  ├─middleware
+│  │  │      authMiddleware.js
+│  │  │
+│  │  ├─models
+│  │  │      Counter.js
+│  │  │      Order.js
+│  │  │      Product.js
+│  │  │      User.js
+│  │  │
+│  │  ├─routes
+│  │  │      orderRoutes.js
+│  │  │      productRoutes.js
+│  │  │      userRoutes.js
+│  │  │
+│  │  └─utils
+│  │          AutoIncrement.js
+│  │
+│  └─node_modules           <-- (라이브러리 폴더: 숨김 처리됨)
+│
+├─docs                      <-- 프로젝트 문서 (수정함)
+│      2025텀프로젝트 수정.pptx - 바로 가기.lnk
+│      2025텀프로젝트.pptx - 바로 가기.lnk
+│      MongoDB.pptx
+│
+└─frontend(React로 대체)
+    │  index.html           <-- 메인 페이지 (수정함)
+    │  style.css            <-- 전역 스타일 (수정함)
+    │
+    ├─public                <-- 정적 리소스 폴더
+    └─src                   <-- [핵심] 프론트엔드 소스 코드 (폴더 구조)
+        ├─api
+        ├─assets
+        ├─components
+        ├─context
+        ├─hooks
+        ├─pages
+        ├─routes
+        └─styles
