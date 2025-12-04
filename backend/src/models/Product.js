@@ -39,16 +39,28 @@ const ReviewSchema = new Schema(
 // 상품 이미지에 대한 서브 스키마
 const ImageSchema = new Schema(
   {
-    url: { // 이미지 URL (필수)
-      type: String,
-      required: true,
+    filename: { 
+      type: String, 
+      required: true, 
+      // 실제 저장되는 파일명, 예시: "170123456789_my_shoes.jpg" (중복 방지용 난수 포함)
+      // 170123456789_my_shoes.jpg
     },
-    isThumbnail: { // 썸네일(대표 이미지) 여부
-      type: Boolean,
-      default: false,
+    originalName: { 
+      type: String, 
+      // 사용자가 올린 원래 파일명 (예: "내신발.jpg")
+      // 다운로드 기능을 구현할 때 유용함
+    },
+    path: {
+      type: String,
+      // 전체 경로 (예: "/img/170123456789_my_shoes.jpg")
+      // 프론트엔드에서 src로 바로 쓰기 편하게 저장
+    },
+    isThumbnail: { 
+      type: Boolean, 
+      default: false, 
     },
   },
-  { _id: false }
+  { _id: false }  // 별도 id 생성X
 );
 
 // 상품에 대한 메인 스키마

@@ -1,0 +1,37 @@
+### 상품 등록
+POST /api/admin/products
+[{ // 1. 기본 필수 정보
+  "name": "남성 울 러너 (Old Version)",
+  "description": "작년에 출시된 클래식 모델입니다. 편안한 착화감을 제공합니다.",
+  "originalPrice": 135000,
+
+  // 2. 날짜 수동 설정 (★ 요청하신 createdAt 포함)
+  // 30일이 지났으므로 '신제품' 라벨이 안 붙게 테스트할 수 있습니다.
+  "createdAt": "2024-01-01T10:00:00.000Z", 
+
+  // 3. 할인 정보
+  "discountRate": 0.3, // 30% 할인
+  "saleStartDate": "2025-11-01T00:00:00.000Z",
+  "saleEndDate": "2025-11-30T23:59:59.999Z",
+
+  // 4. 통계 데이터 강제 주입 (베스트셀러 테스트용)
+  // 백엔드 기본값은 0이지만, 이렇게 보내면 이 값으로 저장됩니다.
+  "soldCount": 500,       // 판매량 500개 (판매순 정렬 테스트)
+  "reviewCount": 5,       // 리뷰 개수
+  "totalRatingSum": 24,   // 총점 (평균 4.8점)
+
+  // 5. 옵션 및 속성
+  "sizes": [250, 260, 270, 280],
+  "materials": ["Merino Wool", "Recycled Polyester"],
+  "categories": ["남성", "라이프스타일", "클래식"],
+
+  // 6. 이미지 (파일명 배열)
+  "images": [
+    "wool_runner_old_thumb.jpg",
+    "wool_runner_old_side.jpg"
+  ],
+
+  // 7. 리뷰 데이터 (보통은 빈 배열 []로 보내거나 생략합니다)
+  // 상품 등록 시 초기 리뷰를 강제로 넣고 싶다면 이렇게 구조를 맞춰야 합니다.
+  "reviews": [] 
+}]
