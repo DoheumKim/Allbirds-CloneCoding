@@ -123,7 +123,7 @@ npm run dev
 
 | Name | Role | Responsibilities | GitHub |
 | :--- | :--- | :--- | :--- |
-| **Doheum Kim** | **Backend Lead**<br>& Frontend | • **Backend:** 전체 시스템 아키텍처 및 API 설계/구현 (100%)<br>• **Frontend:** 마이페이지(My Page) 및 회원 관련 기능 구현 | [Link](https://github.com/DoheumKim) |
+| **Doheum Kim** | **Backend Lead**<br>& Frontend | • **Backend:** 전체 시스템 아키텍처 및 API 설계/구현 (100%)<br>• **Frontend:** 마이페이지(My Page) | [Link](https://github.com/DoheumKim) |
 | **Seoin Jung** | Frontend Dev | • 프론트엔드 핵심 로직 및 UI/UX 공동 개발 | [Link](https://github.com/tim9985) |
 | **Wookdong Kim** | Frontend Dev | • 프론트엔드 핵심 로직 및 UI/UX 공동 개발 | [Link](https://github.com/...) |
 
