@@ -21,6 +21,10 @@ React 프론트엔드와 Express/MongoDB 백엔드를 기반으로 쇼핑몰의 
 * **Security:** CORS
 
 ---
+## Project Demo
+| Main Page | Product Detail |
+| :---: | :---: |
+| <img src="./example_images/main.png" width="400"/> | <img src="./example_images/detail.png" width="400"/> | <img src="./example_images/mypage.png" width="400"/> | <img src="./example_images/cart.png" width="400"/> | <img src="./example_images/admin.png" width="400"/> |
 
 ## Getting Started (설치 및 실행)
 
