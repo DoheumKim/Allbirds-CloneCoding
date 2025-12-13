@@ -22,9 +22,14 @@ React 프론트엔드와 Express/MongoDB 백엔드를 기반으로 쇼핑몰의 
 
 ---
 ## Project Demo
-| Main Page | Product Detail | My Page | Cart | Admin Page |
-| :---: | :---: | :---: | :---: | :---: |
-| <img src="./example_images/main.png" width="400"/> | <img src="./example_images/detail.png" width="400"/> | <img src="./example_images/mypage.png" width="400"/> | <img src="./example_images/cart.png" width="400"/> | <img src="./example_images/admin.png" width="400"/> |
+
+| Main Page | Product Detail |
+| :---: | :---: |
+| <img src="./images/main.png" alt="Main" width="100%"> | <img src="./images/detail.png" alt="Detail" width="100%"> |
+| **My Page** | **Cart** |
+| <img src="./images/mypage.png" alt="MyPage" width="100%"> | <img src="./images/cart.png" alt="Cart" width="100%"> |
+| **Admin Page** | **Login Page** |
+| <img src="./images/admin.png" alt="Admin" width="100%"> | <img src="./images/login.png" alt="Login" width="100%"> |
 
 ## Getting Started (설치 및 실행)
 
