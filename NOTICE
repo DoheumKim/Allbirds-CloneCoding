@@ -1,0 +1,52 @@
+Allbirds-CloneCoding
+Copyright 2025 The Allbirds-CloneCoding Team
+
+This product includes software developed by 'The Allbirds-CloneCoding Team'.
+
+=========================================================================
+1. PROJECT PURPOSE & DISCLAIMER
+=========================================================================
+This project is an educational clone coding study project based on the 
+design and functionality of the original 'Allbirds' website.
+
+* Original Website: Allbirds (https://www.allbirds.co.kr/)
+* Purpose: Study & Portfolio (Non-Commercial)
+
+**DISCLAIMER**: 
+This project has NO commercial intent. All product images, logos, and 
+design assets used in this project belong to their respective copyright 
+holders (Allbirds, Inc.). This project is solely for learning purposes.
+
+=========================================================================
+2. TEAM MEMBERS
+=========================================================================
+This software was developed by the following team members:
+
+* Doheum Kim (Backend Lead & Frontend)
+  - Role: 100% of Backend API & DB Design, Frontend (My Page implementation)
+  - GitHub: https://github.com/DoheumKim
+
+* Seoin Jung & Wookdong Kim (Frontend Developers)
+  - Role: Co-developed the core Frontend features (Main, Products, Order flow) and UI/UX.
+  - GitHub: https://github.com/tim9985, https://github.com/...
+
+=========================================================================
+3. THIRD-PARTY SOFTWARE NOTICES
+=========================================================================
+This product includes code/libraries from the following open source projects:
+
+* React (https://reactjs.org/)
+  - Copyright (c) Meta Platforms, Inc. and affiliates.
+  - Licensed under the MIT License.
+
+* Express (https://expressjs.com/)
+  - Copyright (c) 2009-2014 TJ Holowaychuk
+  - Licensed under the MIT License.
+
+* MongoDB (https://www.mongodb.com/)
+  - Copyright (c) MongoDB, Inc.
+  - Licensed under the Apache License 2.0 / SSPL.
+
+* Vite (https://vitejs.dev/)
+  - Copyright (c) 2019-present Evan You
+  - Licensed under the MIT License.
