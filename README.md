@@ -60,7 +60,7 @@ npm run dev
 
 백엔드 서버 주소: `http://localhost:4000`
 
-### 👤 Users (회원)
+### Users (회원)
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `POST` | `/api/users/register` | 회원가입 |
@@ -78,7 +78,7 @@ npm run dev
 `GET /api/products?sort={sortOption}&category={category}&size={size}&minPrice={min}&maxPrice={max}&q={keyword}`
 * `sort`: `recommend` (추천순), `latest` (최신순), `priceAsc` (낮은가격순), `priceDesc` (높은가격순), `review` (리뷰많은순)
 
-### 🛒 Cart (장바구니)
+### Cart (장바구니)
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `GET` | `/api/cart` | 장바구니 조회 |
@@ -87,19 +87,19 @@ npm run dev
 | `DELETE` | `/api/cart/item` | 특정 상품 삭제 |
 | `DELETE` | `/api/cart` | 장바구니 비우기 |
 
-### 📝 Reviews (리뷰)
+### Reviews (리뷰)
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `GET` | `/api/products/:id/reviews` | 특정 상품 리뷰 목록 조회 |
 | `POST` | `/api/products/:id/reviews` | 상품 리뷰 등록 |
 
-### 📦 Orders (주문)
+### Orders (주문)
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `POST` | `/api/orders` | 주문 생성 |
 | `GET` | `/api/orders/my` | 내 주문 내역 조회 |
 
-### 👑 Admin (관리자)
+### Admin (관리자)
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `POST` | `/api/admin/products` | 상품 등록 |
@@ -118,6 +118,14 @@ npm run dev
     * 캔버스
     * 플라스틱 제로 식물성 가죽
 * **Category:** 라이프스타일, 슬립온
+
+## Team & Roles
+
+| Name | Role | Responsibilities | GitHub |
+| :--- | :--- | :--- | :--- |
+| **Doheum Kim** | **Backend Lead**<br>& Frontend | • **Backend:** 전체 시스템 아키텍처 및 API 설계/구현 (100%)<br>• **Frontend:** 마이페이지(My Page) 및 회원 관련 기능 구현 | [Link](https://github.com/DoheumKim) |
+| **Seoin Jung** | Frontend Dev | • 프론트엔드 핵심 로직 및 UI/UX 공동 개발 | [Link](https://github.com/tim9985) |
+| **Wookdong Kim** | Frontend Dev | • 프론트엔드 핵심 로직 및 UI/UX 공동 개발 | [Link](https://github.com/...) |
 
 ## License & Copyright
 
