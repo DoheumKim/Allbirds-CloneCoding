@@ -27,7 +27,7 @@ React 프론트엔드와 Express/MongoDB 백엔드를 기반으로 쇼핑몰의 
 | :---: | :---: |
 | <img src="./images/main.png" alt="Main" width="100%"> | <img src="./images/detail.png" alt="Detail" width="100%"> |
 | **My Page** | **Cart** |
-| <img src="./images/mypage.png" alt="MyPage" width="100%"> | <img src="./images/cart.png?v=2" alt="Cart" width="100%"> |
+| <img src="./images/mypage.png" alt="MyPage" width="100%"> | <img src="" alt="Cart" width="100%"> |
 | **Admin Page** | **Login Page** |
 | <img src="./images/admin.png" alt="Admin" width="100%"> | <img src="./images/login.png" alt="Login" width="100%"> |
 
