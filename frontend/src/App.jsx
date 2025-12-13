@@ -1,5 +1,4 @@
-// src/App.jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom"; 
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AnnouncementBanner } from "@/components/AnnouncementBanner";
 import { Header } from "@/sections/Header";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -8,12 +7,16 @@ import { FloatingButton } from "@/components/FloatingButton";
 import { HomePage } from "@/pages/HomePage";
 import { MensCollection } from "@/pages/MensCollection";
 import { ProductDetail } from "@/pages/ProductDetail";
-import { CartProvider } from "@/context/CartContext";
+import { Login } from "@/pages/Login";
+import { Register } from "@/pages/Register";
 import { MyPageLayout } from "@/pages/mypage/MyPageLayout";
-import { AllMembersLanding } from "@/pages/mypage/AllMembersLanding";
+import { AdminDashboard } from "@/pages/admin/AdminDashboard";
+import { ProductManagement } from "@/pages/admin/ProductManagement";
+import { ProductRegistration } from "@/pages/admin/ProductRegistration";
+import { SalesReport } from "@/pages/admin/SalesReport";
+import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 import styled from "styled-components";
-
-import { DevLogin } from "@/pages/DevLogin";
 
 const AppContainer = styled.div`
   display: grid;
@@ -30,6 +33,11 @@ const AppContainer = styled.div`
 
 const MainContent = styled.main`
   position: relative;
+  padding-top: 104px;
+  
+  @media (max-width: 767px) {
+    padding-top: 96px;
+  }
 `;
 
 const HiddenList = styled.ul`
@@ -40,30 +48,36 @@ const HiddenList = styled.ul`
 
 export const App = () => {
   return (
-    <CartProvider>
-      <BrowserRouter>
-        <AppContainer>
-          <AnnouncementBanner />
-          <Header />
-          <CartDrawer />
-          <MainContent>
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/collections/mens-off" element={<MensCollection />} />
-              <Route path="/products/:productId" element={<ProductDetail />} />
-              <Route path="/mypage/*" element={<MyPageLayout />} />
-              <Route path="/all-members" element={<AllMembersLanding />} />
-              <Route path="/dev-login" element={<DevLogin />} />
-            </Routes>
-          </MainContent>
-          <Footer />
-          <HiddenList>
-            <li>Choosing a selection results in a full page refresh.</li>
-            <li>Opens in a new window.</li>
-          </HiddenList>
-          <FloatingButton />
-        </AppContainer>
-      </BrowserRouter>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <BrowserRouter>
+          <AppContainer>
+            <AnnouncementBanner />
+            <Header />
+            <CartDrawer />
+            <MainContent>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/collections/mens-off" element={<MensCollection />} />
+                <Route path="/products/:productId" element={<ProductDetail />} />
+                <Route path="/account/login" element={<Login />} />
+                <Route path="/account/register" element={<Register />} />
+                <Route path="/mypage/*" element={<MyPageLayout />} />
+                <Route path="/admin" element={<AdminDashboard />} />
+                <Route path="/admin/products" element={<ProductManagement />} />
+                <Route path="/admin/products/new" element={<ProductRegistration />} />
+                <Route path="/admin/sales" element={<SalesReport />} />
+              </Routes>
+            </MainContent>
+            <Footer />
+            <HiddenList>
+              <li>Choosing a selection results in a full page refresh.</li>
+              <li>Opens in a new window.</li>
+            </HiddenList>
+            <FloatingButton />
+          </AppContainer>
+        </BrowserRouter>
+      </CartProvider>
+    </AuthProvider>
   );
 };

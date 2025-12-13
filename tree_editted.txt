@@ -1,89 +1,143 @@
-루트 폴더
+D:.
+│  .gitignore
 │  README.md
+│  package.json
+│  package-lock.json
+│  backend.zip
+│  Prompt.txt
+│  test.js
+│  백엔드설명.md
+│  상품등록 예시.txt
+│  설명.txt
 │
 ├─backend
-│  │  package.json          <-- 프로젝트 의존성/스크립트 설정
+│  │  .env.example
+│  │  package.json          <-- 백엔드 의존성 설정
 │  │  package-lock.json
+│  │  README.md
 │  │
-│  ├─mongo                  <-- DB 테스트 스크립트
+│  ├─mongo                  <-- DB 초기화 및 테스트 스크립트
+│  │      check-dates.js
+│  │      init-products.mongodb.js
 │  │      playground-1.mongodb.js
-│  │      playground-2.mongodb.js
-│  │      playground-3.mongodb.js
-│  │      test.json
+│  │      seed.js
+│  │      ...
 │  │
-│  ├─src                    <-- 백엔드 소스 코드
+│  ├─src                    <-- [핵심] 백엔드 소스 코드
 │  │  │  app.js
 │  │  │
-│  │  ├─api                 <-- 외부 API 연동 관련
-│  │  │      axiosInstance.js
+│  │  ├─api                 <-- 외부 API 연동 등
+│  │  │      adminAPI.js
 │  │  │      productApi.js
+│  │  │      userAPI.js
+│  │  │      ...
 │  │  │
 │  │  ├─config
 │  │  │      db.js
 │  │  │
-│  │  ├─controllers
+│  │  ├─controllers         <-- 비즈니스 로직 처리
 │  │  │      adminController.js
 │  │  │      cartController.js
 │  │  │      orderController.js
 │  │  │      productController.js
 │  │  │      userController.js
+│  │  │      ...
 │  │  │
-│  │  ├─data                <-- 데이터 관련 폴더
-│  │  │
-│  │  ├─middleware
+│  │  ├─middleware          <-- 인증, 업로드 등 미들웨어
 │  │  │      authMiddleware.js
+│  │  │      uploadMiddleware.js
+│  │  │      dateFormatter.js
 │  │  │
-│  │  ├─models
+│  │  ├─models              <-- Mongoose 스키마 정의
 │  │  │      Counter.js
 │  │  │      Order.js
 │  │  │      Product.js
+│  │  │      Review.js
 │  │  │      User.js
 │  │  │
-│  │  ├─routes
+│  │  ├─routes              <-- API 라우팅 설정
 │  │  │      adminRoutes.js
 │  │  │      cartRoutes.js
 │  │  │      orderRoutes.js
 │  │  │      productRoutes.js
 │  │  │      userRoutes.js
+│  │  │      ...
 │  │  │
-│  │  ├─services            <-- 비즈니스 로직 분리
+│  │  ├─services            <-- 서비스 계층 (외부 로직 등)
 │  │  │      externalProductService.js
 │  │  │
-│  │  └─utils
+│  │  └─utils               <-- 유틸리티 함수
 │  │          AutoIncrement.js
+│  │          dateHelper.js
 │  │          rankingCalculator.js
 │  │
-│  └─node_modules           <-- (라이브러리 폴더: 숨김 처리됨)
+│  └─node_modules           <-- (라이브러리 폴더: 생략됨)
 │
-├─docs                      <-- 프로젝트 문서(교수님이 제작한 파일이라 볼 수 없음)
-│      2025텀프로젝트 수정.pptx - 바로 가기.lnk
-│      2025텀프로젝트.pptx - 바로 가기.lnk
+├─docs                      <-- 프로젝트 관련 문서
+│      2025텀프로젝트 수정.pptx
+│      2025텀프로젝트.pptx
 │      MongoDB.pptx
 │
-└─frontend                  <-- 미완성
-    │  .env                 <-- 환경 변수 
-    │  index.html           <-- 메인 페이지
+├─example_img               <-- 참고용 이미지 리소스
+│      shoe_wool_runner_nz_dark.png
+│      ...
+│
+└─frontend
+    │  .env.example
+    │  vite.config.js       <-- Vite 설정 파일
+    │  index.html           <-- 메인 진입점
     │  package.json
-    │  tailwind.config.js   <-- Tailwind CSS 설정 
-    │  vite.config.ts       <-- Vite 빌드 설정 
-    │  tsconfig.json
+    │  package-lock.json
+    │  README.md
     │
-    ├─public                <-- 정적 리소스 폴더 (img, svg 등)
+    ├─public 
+    │  └─img                <-- 상품 이미지 및 아이콘 (icon-*.svg 등)
     │
-    └─src                   <-- 프론트엔드 소스 코드
-        │  App.tsx
+    ├─node_modules          <-- (라이브러리 폴더: 생략됨)
+    │
+    └─src                   <-- [핵심] 프론트엔드 소스 코드
+        │  App.jsx
         │  index.css
-        │  index.tsx
+        │  index.jsx
         │
-        ├─components        <-- 재사용 가능한 컴포넌트
-        │  │  AnnouncementBanner.tsx
-        │  │  FloatingButton.tsx
-        │  │  ProductCard.tsx
-        │  │  SaeModal.tsx
-        │  │
-        │  └─CartDrawer
+        ├─api               <-- 백엔드 통신 모듈
+        │      client.js
+        │      productApi.js
+        │      reviewAPI.js
+        │      userAPI.js
         │
-        └─sections          <-- 페이지 섹션별 컴포넌트 구분
+        ├─components        <-- 재사용 가능한 UI 컴포넌트
+        │  │  AnnouncementBanner.jsx
+        │  │  ProductCard.jsx
+        │  │  ReviewModal.jsx
+        │  │  FloatingButton.jsx
+        │  │  ...
+        │  └─CartDrawer     <-- 장바구니 드로어 컴포넌트
+        │
+        ├─context           <-- 전역 상태 관리 (Context API)
+        │      AuthContext.jsx
+        │      CartContext.jsx
+        │
+        ├─data              <-- 정적 데이터 파일
+        │      productsData.js
+        │
+        ├─pages             <-- 라우팅 페이지 컴포넌트
+        │  │  HomePage.jsx
+        │  │  Login.jsx
+        │  │  MensCollection.jsx
+        │  │  ProductDetail.jsx
+        │  │  Register.jsx
+        │  │  ...
+        │  ├─admin          <-- 관리자 전용 페이지
+        │  │      AdminDashboard.jsx
+        │  │      ProductManagement.jsx
+        │  │      ...
+        │  └─mypage         <-- 마이페이지 관련 컴포넌트
+        │          MyInfo.jsx
+        │          MyOrders.jsx
+        │          ...
+        │
+        └─sections          <-- 페이지 내 주요 섹션들
             ├─Footer
             ├─Header
             ├─Hero

@@ -96,6 +96,12 @@ const ProductsContainer = styled.div`
   gap: 20px;
   overflow: auto;
   scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
 `;
 
 const SliderIcon = styled.img`

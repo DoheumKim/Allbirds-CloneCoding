@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import { getMe } from "@/api/userAPI"; // 로그인 여부 확인용 API
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { useCart } from "@/context/CartContext";
 
 const ActionsWrapper = styled.div`
   box-sizing: border-box;
@@ -16,7 +17,7 @@ const ActionsWrapper = styled.div`
   }
 `;
 
-const ActionLink = styled.a`
+const ActionLink = styled(Link)`
   align-items: center;
   box-sizing: border-box;
   caret-color: transparent;
@@ -25,6 +26,7 @@ const ActionLink = styled.a`
   justify-content: center;
   width: 1.5rem;
   position: relative;
+  text-decoration: none;
 `;
 
 const ActionIcon = styled.img`
@@ -44,7 +46,7 @@ const CartIcon = styled.img`
 const CartBadge = styled.div`
   box-sizing: border-box;
   caret-color: transparent;
-
+  
   &::after {
     accent-color: auto;
     align-items: center;
@@ -73,40 +75,83 @@ const CartBadge = styled.div`
     width: 15px;
     z-index: 10;
     border-radius: 50%;
+    border-collapse: separate;
     right: 3px;
     top: 18px;
     font-family: Pretendard, sans-serif;
   }
 `;
 
+const LoginIndicator = styled.div`
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  background-color: #4CAF50;
+  border-radius: 50%;
+`;
+
+const UserName = styled.span`
+  font-size: 0.75rem;
+  color: #212121;
+  margin-right: 0.5rem;
+  white-space: nowrap;
+`;
+
+const AdminButton = styled(Link)`
+  padding: 6px 12px;
+  background-color: #212121;
+  color: white;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-right: 0.5rem;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #000;
+  }
+`;
+
 export const HeaderActions = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, user } = useAuth();
+  const { openCart } = useCart();
 
-  // 사람 아이콘 클릭 -> getMe 호출해서 로그인 상태 판별
-  const handleAccountClick = async (event) => {
-    event.preventDefault(); // 기본 a 이동 막기
-
-    try {
-      await getMe();
-      navigate("/mypage");    // 성공 -> 로그인 상태
-    } catch (error) {
-      navigate("/account/login");   // 실패 -> 비로그인 상태
+  const handleAccountClick = (event) => {
+    event.preventDefault();
+    if (isLoggedIn) {
+      navigate("/mypage");
+    } else {
+      navigate("/account/login");
     }
+  };
+
+  const handleCartClick = (event) => {
+    event.preventDefault();
+    openCart();
   };
 
   return (
     <ActionsWrapper>
-
-      <ActionLink href="/search">
-        <ActionIcon src="/img/icon-6.svg" alt="Search" />
+      {isLoggedIn && user && (
+        <UserName>{user.displayName || user.loginName}님</UserName>
+      )}
+      {isLoggedIn && user?.role === 'admin' && (
+        <AdminButton to="/admin">관리자</AdminButton>
+      )}
+      <ActionLink to="/search">
+        <ActionIcon src="/img/icon-6.svg" alt="검색" />
       </ActionLink>
-
-      <ActionLink href="/account/login" onClick={handleAccountClick}>
-        <ActionIcon src="/img/icon-7.svg" alt="Account" />
+      <ActionLink to="#" onClick={handleAccountClick} style={{ position: 'relative' }}>
+        <ActionIcon src="/img/icon-7.svg" alt={isLoggedIn ? "마이페이지" : "로그인"} />
+        {isLoggedIn && <LoginIndicator />}
       </ActionLink>
-
-      <ActionLink>
-        <CartIcon src="/img/icon-8.svg" alt="Cart" />
+      <ActionLink to="#" onClick={handleCartClick}>
+        <CartIcon src="/img/icon-8.svg" alt="장바구니" />
         <CartBadge />
       </ActionLink>
     </ActionsWrapper>

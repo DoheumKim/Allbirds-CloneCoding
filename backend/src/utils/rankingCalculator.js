@@ -1,11 +1,11 @@
 // 추천순 가산점 계산(총점 100점)
 
 // 로그 스케일 기준점
-// 판매량: 100개 팔면 만점  - log10(100)을 기준으로 하면 판매량이 1개일때도 0점임
-const MAX_SALES_LOG = Math.log10(101);
+// 판매량: 100개 팔면 만점
+const MAX_SALES_LOG = Math.log10(100);
 
-// 리뷰 수: 상품당 최대 3개만 허용하므로 log10(3+1)을 기준으로 삼음 - log10(3)을 기준으로 하면 리뷰가 1개일때도 0점임
-const MAX_REVIEW_LOG = Math.log10(4);
+// 리뷰 수: 상품당 최대 3개만 허용하므로 log10(3)을 기준으로 삼음
+const MAX_REVIEW_LOG = Math.log10(3);
 
 const NEW_WINDOW = 30;      // 최신순(일수) 기준점
 const MAX_DISCOUNT = 0.99;   // 최대 99% 할인 (0.99 = 99%)
@@ -25,7 +25,7 @@ export function calculateScore(product) {
   // 1. 판매량 (40점) - 로그 스케일 적용
   let salesScore = 0;
   if (soldCount > 0) {
-    salesScore = (Math.log10(soldCount + 1) / MAX_SALES_LOG) * 40;
+    salesScore = (Math.log10(soldCount) / MAX_SALES_LOG) * 40;
   }
   salesScore = Math.min(salesScore, 40);
 
@@ -37,11 +37,10 @@ export function calculateScore(product) {
   // 리뷰 수는 0~3개 사이이므로, 1개/2개/3개만으로도 점수 차이가 나도록 설정
   let reviewScore = 0;
   const clampedReviewCount = Math.min(reviewCount, 3); // 안전하게 3으로 clamp
-//  리뷰가 3개 넘어도 3개까지만 반영됨(사실 리뷰 3개이상 안넣을거라 필요없음)
 
   if (clampedReviewCount > 0) {
     reviewScore =
-      (Math.log10(clampedReviewCount + 1) / MAX_REVIEW_LOG) * 15;
+      (Math.log10(clampedReviewCount) / MAX_REVIEW_LOG) * 15;
   }
   reviewScore = Math.min(reviewScore, 15);
 

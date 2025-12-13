@@ -1,3 +1,4 @@
+// src/pages/mypage/OrderInfoForm.jsx
 import styled from "styled-components";
 
 const Form = styled.form`

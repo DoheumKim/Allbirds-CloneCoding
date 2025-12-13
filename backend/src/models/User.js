@@ -1,6 +1,7 @@
 import mongoose, { model } from "mongoose";
 const { Schema } = mongoose;
 import { getNextSequence } from "../utils/AutoIncrement.js";
+import { getKSTNow } from "../utils/dateHelper.js";
 
 // required: true === Not Null
 
@@ -73,7 +74,7 @@ const UserSchema = new Schema({
 
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: getKSTNow,
   },
 
   // INDEX: loginName

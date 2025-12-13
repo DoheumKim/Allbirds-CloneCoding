@@ -2,6 +2,7 @@
 
 import mongoose from "mongoose";
 import { getNextSequence } from "../utils/AutoIncrement.js";
+import { getKSTNow } from "../utils/dateHelper.js";
 const { Schema } = mongoose;
 
 // 리뷰에 대한 서브 스키마
@@ -30,7 +31,7 @@ const ReviewSchema = new Schema(
     },
     createdAt: { // 리뷰 작성일(등록일)
       type: Date,
-      default: Date.now,
+      default: getKSTNow,
     },
   },
   { _id: false } // 별도 id 생성X
@@ -39,28 +40,16 @@ const ReviewSchema = new Schema(
 // 상품 이미지에 대한 서브 스키마
 const ImageSchema = new Schema(
   {
-    filename: { 
-      type: String, 
-      required: true, 
-      // 실제 저장되는 파일명, 예시: "170123456789_my_shoes.jpg" (중복 방지용 난수 포함)
-      // 170123456789_my_shoes.jpg
-    },
-    originalName: { 
-      type: String, 
-      // 사용자가 올린 원래 파일명 (예: "내신발.jpg")
-      // 다운로드 기능을 구현할 때 유용함
-    },
-    path: {
+    url: { // 이미지 URL (필수)
       type: String,
-      // 전체 경로 (예: "/img/170123456789_my_shoes.jpg")
-      // 프론트엔드에서 src로 바로 쓰기 편하게 저장
+      required: true,
     },
-    isThumbnail: { 
-      type: Boolean, 
-      default: false, 
+    isThumbnail: { // 썸네일(대표 이미지) 여부
+      type: Boolean,
+      default: false,
     },
   },
-  { _id: false }  // 별도 id 생성X
+  { _id: false }
 );
 
 // 상품에 대한 메인 스키마
@@ -96,7 +85,7 @@ const ProductSchema = new Schema({
   createdAt: {
     // 상품 등록일(생성일)
     type: Date,
-    default: Date.now,
+    default: getKSTNow,
   },
     soldCount: {
     // 총 판매량 (주문 시 증가)
@@ -127,6 +116,13 @@ const ProductSchema = new Schema({
 
   // 사이즈
   sizes: [Number],  // 예: [240, 245, 250]
+
+  // 사이즈별 재고 (예: { "240": 10, "245": 5, "250": 0 })
+  stock: {
+    type: Map,
+    of: Number,
+    default: {},
+  },
 
   // 소재
   materials: [String],  // 예: ["가볍고 시원한 tree", "면"]

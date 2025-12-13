@@ -2,6 +2,7 @@
 
 import Product from "../models/Product.js";
 import { calculateScore } from "../utils/rankingCalculator.js";
+import { getKSTNow } from "../utils/dateHelper.js";
 
 // 모든 상품 조회 (GET /api/products?sort=recommend)
 export async function getAllProducts(req, res, next) {
@@ -20,8 +21,9 @@ export async function getAllProducts(req, res, next) {
 
     // 카테고리 필터 (categories 안에 값이 포함되면 매칭)
     if (category) {
-      // 여러 개면 "라이프스타일,슬립온" 이런 식으로 보내고 $in으로 처리해도 됨
-      filter.categories = category;
+      // 여러 개면 "라이프스타일,슬립온" 이런 식으로 쉼표로 구분
+      const categories = category.split(',').map(c => c.trim());
+      filter.categories = { $in: categories };
     }
 
     // 사이즈 필터 : sizes 배열에 포함되는지 체크
@@ -87,6 +89,23 @@ export async function getAllProducts(req, res, next) {
     const products = await Product.find(filter).sort(sortOption);
 
     res.json(products);
+  } catch (err) {
+    next(err);
+  }
+}
+
+// 단일 상품 조회 (GET /api/products/:id)
+export async function getProductById(req, res, next) {
+  try {
+    const productId = req.params.id;
+    
+    const product = await Product.findById(productId);
+    
+    if (!product) {
+      return res.status(404).json({ message: "상품을 찾을 수 없습니다." });
+    }
+
+    return res.json(product);
   } catch (err) {
     next(err);
   }
@@ -246,7 +265,7 @@ export async function addReview(req, res, next) {
       displayName,
       rating,
       comment,
-      createdAt: new Date(),
+      createdAt: getKSTNow(),
     });
 
     // 리뷰 통계(평균 평점 계산용) 갱신

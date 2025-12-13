@@ -2,7 +2,7 @@
 import { NavLink, Routes, Route, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useEffect } from "react";
-import { getMe } from "@/api/userAPI";
+import { useAuth } from "@/context/AuthContext";
 import { MyOverview } from "./MyOverview";
 import { MyInfo } from "./MyInfo";
 import { MyOrders } from "./MyOrders.jsx";
@@ -37,7 +37,7 @@ const ContentWrapper = styled.div`
 
 const SideNav = styled.nav`
   font-family: "Pretendard", sans-serif;
-  font-size: 16px;
+  font-size: 25px;
 `;
 
 const SideTitle = styled.div`
@@ -66,6 +66,7 @@ const LogoutLink = styled.button`
   color: #111;
   font-size: 14px;
   cursor: pointer;
+  text-decoration: underline;
 `;
 
 const MainArea = styled.section``;
@@ -78,23 +79,24 @@ const MainTitle = styled.h1`
 
 export const MyPageLayout = () => {
   const navigate = useNavigate();
+  const { isLoggedIn, loading, logout } = useAuth();
 
   // 마이페이지 진입 시 로그인 체크
   useEffect(() => {
-    const check = async () => {
-      try {
-        await getMe();
-      } catch {
-        navigate("/account/login");
-      }
-    };
-    check();
-  }, [navigate]);
+    if (!loading && !isLoggedIn) {
+      navigate("/account/login");
+    }
+  }, [isLoggedIn, loading, navigate]);
 
-  const handleLogout = () => {
-    // TODO: logoutUser API가 있다면 여기에서 호출
-    navigate("/account/login");
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
   };
+
+  // 로딩 중이면 아무것도 표시하지 않음
+  if (loading) {
+    return null;
+  }
 
   return (
     <PageWrapper>

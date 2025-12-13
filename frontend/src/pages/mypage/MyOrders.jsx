@@ -1,7 +1,10 @@
+// src/pages/mypage/MyOrders.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getMyOrders } from "@/api/userAPI";
+import { ReviewModal } from "@/components/ReviewModal";
+import { checkReviewExists } from "@/api/reviewAPI";
 
 const Wrapper = styled.div`
   background-color: #f2f2f2;
@@ -17,7 +20,7 @@ const TitleBar = styled.div`
 const List = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 16px;
 `;
 
 const EmptyText = styled.p`
@@ -26,13 +29,45 @@ const EmptyText = styled.p`
   color: #555;
 `;
 
-// 회색 카드 하나
+// 주문 카드
+const OrderCard = styled.div`
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 16px;
+`;
+
+const OrderHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
+`;
+
+const OrderDate = styled.span`
+  font-size: 14px;
+  color: #666;
+`;
+
+const OrderTotal = styled.span`
+  font-size: 15px;
+  font-weight: 700;
+  color: #212121;
+`;
+
+// 회색 카드 하나 (주문 항목)
 const ItemCard = styled.div`
-  background-color: #b7b3b3;
+  background-color: #f5f5f5;
   padding: 14px 16px;
   display: flex;
   justify-content: space-between;
   align-items: stretch;
+  margin-bottom: 8px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -79,6 +114,15 @@ const ReviewButton = styled.button`
   color: #fff;
   font-size: 13px;
   cursor: pointer;
+
+  &:hover {
+    background-color: #3a6faf;
+  }
+
+  &:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+  }
 `;
 
 function formatDate(dateStr) {
@@ -92,7 +136,9 @@ function formatDate(dateStr) {
 }
 
 export const MyOrders = () => {
-  const [items, setItems] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [reviewModal, setReviewModal] = useState(null);
+  const [reviewedItems, setReviewedItems] = useState(new Set());
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -101,20 +147,25 @@ export const MyOrders = () => {
         const res = await getMyOrders();
         console.log("getMyOrders response:", res);
 
-        // 백엔드 응답 형태를 최대한 유연하게 처리
-        const raw =
-          res.orders ??
-          res.data?.orders ??
-          res.data ??
-          res;
+        // 백엔드 응답: { orders: [...] }
+        const list = res.orders ?? res.data?.orders ?? [];
+        setOrders(list);
 
-        const list = Array.isArray(raw)
-          ? raw
-          : Array.isArray(raw?.items)
-          ? raw.items
-          : [];
-
-        setItems(list);
+        // 리뷰 작성 여부 확인
+        const reviewed = new Set();
+        for (const order of list) {
+          for (const item of order.items || []) {
+            try {
+              const { exists } = await checkReviewExists(item.productId, order._id);
+              if (exists) {
+                reviewed.add(`${order._id}-${item.productId}`);
+              }
+            } catch (e) {
+              console.error("리뷰 확인 오류:", e);
+            }
+          }
+        }
+        setReviewedItems(reviewed);
       } catch (e) {
         console.error("getMyOrders error:", e);
       }
@@ -123,23 +174,20 @@ export const MyOrders = () => {
     fetchOrders();
   }, []);
 
-  const handleReviewClick = (item) => {
-    // productId 추출 (백엔드 구조에 맞게 여러 후보 지원)
-    const productId =
-      item.productId ||
-      item.product?._id ||
-      item.product?._id?.toString?.();
-
+  const handleReviewClick = (orderId, productId, productName) => {
     if (!productId) {
-      alert("상품 정보를 찾을 수 없어 후기 작성 페이지로 이동할 수 없습니다.");
+      alert("상품 정보를 찾을 수 없습니다.");
       return;
     }
-
-    // 상품 상세 페이지로 이동 → 거기서 리뷰 작성 가능하도록 연결
-    navigate(`/products/${productId}#review`);
+    setReviewModal({ orderId, productId, productName });
   };
 
-  if (!items.length) {
+  const handleReviewSuccess = () => {
+    // 리뷰 작성 성공 시 목록 새로고침
+    window.location.reload();
+  };
+
+  if (!orders.length) {
     return (
       <Wrapper>
         <TitleBar>지난 주문 내역</TitleBar>
@@ -152,68 +200,57 @@ export const MyOrders = () => {
     <Wrapper>
       <TitleBar>지난 주문 내역</TitleBar>
       <List>
-        {items.map((item) => {
-          // 각 필드 추출 (여러 키 이름 지원)
-          const name =
-            item.productName ||
-            item.product?.name ||
-            item.name ||
-            "알 수 없는 상품";
+        {orders.map((order) => (
+          <OrderCard key={order._id}>
+            <OrderHeader>
+              <OrderDate>주문일: {formatDate(order.createdAt)}</OrderDate>
+              <OrderTotal>총 {order.totalPrice?.toLocaleString()}원</OrderTotal>
+            </OrderHeader>
+            
+            {order.items?.map((item, idx) => (
+              <ItemCard key={`${order._id}-${item.productId}-${idx}`}>
+                <LeftCol>
+                  <ProductInfo>
+                    <div>
+                      제품명:{" "}
+                      <a href={`/products/${item.productId}`}>
+                        {item.productName || "알 수 없는 상품"}
+                      </a>
+                    </div>
+                    <div>사이즈: {item.size}</div>
+                    <div>
+                      단가: {item.priceAtPurchase?.toLocaleString()}원
+                    </div>
+                  </ProductInfo>
 
-          const quantity =
-            item.quantity ??
-            item.qty ??
-            item.count ??
-            1;
+                  <ReviewButton
+                    type="button"
+                    onClick={() => handleReviewClick(order._id, item.productId, item.productName)}
+                    disabled={reviewedItems.has(`${order._id}-${item.productId}`)}
+                  >
+                    {reviewedItems.has(`${order._id}-${item.productId}`) ? "작성완료" : "후기작성"}
+                  </ReviewButton>
+                </LeftCol>
 
-          const totalPrice =
-            item.totalPrice ??
-            item.paymentAmount ??
-            item.price ??
-            (item.product?.price && quantity
-              ? item.product.price * quantity
-              : 0);
-
-          const paidAt =
-            item.paidAt ??
-            item.paymentDate ??
-            item.createdAt ??
-            item.orderDate;
-
-          return (
-            <ItemCard key={item._id || `${name}-${paidAt}-${Math.random()}`}>
-              <LeftCol>
-                <ProductInfo>
-                  <div>
-                    제품명:{" "}
-                    <a href="#">
-                      {name}
-                    </a>
-                  </div>
-                  <div>
-                    결제금액:{" "}
-                    {totalPrice != null
-                      ? `${totalPrice.toLocaleString()}원`
-                      : "-"}
-                  </div>
-                </ProductInfo>
-
-                <ReviewButton
-                  type="button"
-                  onClick={() => handleReviewClick(item)}
-                >
-                  후기작성
-                </ReviewButton>
-              </LeftCol>
-
-              <RightCol>
-                <div>수량: {quantity}개</div>
-                <div>결제일: {formatDate(paidAt)}</div>
-              </RightCol>
-            </ItemCard>
-          );
-        })}
+                <RightCol>
+                  <div>수량: {item.quantity}개</div>
+                  <div>소계: {(item.priceAtPurchase * item.quantity).toLocaleString()}원</div>
+                </RightCol>
+              </ItemCard>
+            ))}
+          </OrderCard>
+        ))}
       </List>
+
+      {reviewModal && (
+        <ReviewModal
+          productId={reviewModal.productId}
+          productName={reviewModal.productName}
+          orderId={reviewModal.orderId}
+          onClose={() => setReviewModal(null)}
+          onSuccess={handleReviewSuccess}
+        />
+      )}
     </Wrapper>
   );
 };

@@ -1,3 +1,4 @@
+// src/pages/mypage/MyInfo.jsx
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getMe } from "@/api/userAPI";

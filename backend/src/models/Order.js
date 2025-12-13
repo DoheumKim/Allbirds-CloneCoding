@@ -3,6 +3,7 @@
 import mongoose, { model } from "mongoose";
 const { Schema } = mongoose;
 import { getNextSequence } from "../utils/AutoIncrement.js";
+import { getKSTNow } from "../utils/dateHelper.js";
 
 // 주문 항목(스냅샷)에 대한 서브 스키마
 const OrderItemSchema = new Schema(
@@ -56,7 +57,7 @@ const OrderSchema = new Schema({
   createdAt: {
     // 주문(결제)일(날짜 및 시간)
     type: Date,
-    default: Date.now,
+    default: getKSTNow,
   },
 
   items: [

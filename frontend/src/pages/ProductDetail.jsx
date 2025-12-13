@@ -1,8 +1,15 @@
+// frontend\src\pages\ProductDetail.jsx
 import styled from "styled-components";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getProductById } from "@/api/productApi";
+import { getProductReviews } from "@/api/reviewAPI";
 import { useCart } from "@/context/CartContext";
+
+const PageWrapper = styled.div`
+  background-color: #f8f8f8;
+  min-height: 100vh;
+`;
 
 const PageContainer = styled.div`
   width: 100%;
@@ -382,51 +389,80 @@ const AccordionContent = styled.div`
   }
 `;
 
+// Edited / 좌우 패딩을 없애서 내부 요소가 중앙 잡기 편하게 변경
 const ReviewsSection = styled.div`
   max-width: 1440px;
   margin: 4rem auto;
-  padding: 0 5rem;
+  padding: 0;
   
   @media (max-width: 990px) {
     padding: 0 1.25rem;
+    margin: 2rem auto;
   }
 `;
-
+// Edited / 너비를 760px로 고정하고 중앙 정렬
 const ReviewsHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  max-width: 760px; 
+  width: 100%;
+  margin: 0 auto 3rem auto;
+  
+  display: flex; 
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
+  
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(24, 24, 24, 0.1);
 `;
 
-const Rating = styled.div`
+// Edited
+const RatingSection = styled.div`
   display: flex;
+  flex-direction: column;
   align-items: center;
+  gap: 0.5rem;
+`;
+
+// Edited
+const RatingScore = styled.div`
+  font-size: 3rem;
+  font-weight: 400;
+  color: rgb(24, 24, 24);
+  line-height: 1;
+`;
+
+const RatingDetails = styled.div`
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 `;
 
 const Stars = styled.div`
   display: flex;
-  gap: 0.125rem;
-  color: #fbbf24;
-  font-size: 1.5rem;
+  gap: 2px;
+  font-size: 1.2rem;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+  }
 `;
 
-const RatingText = styled.span`
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #000;
-`;
-
-const ReviewCount = styled.span`
+const ReviewCount = styled.div`
   font-size: 0.875rem;
-  color: #666;
-  margin-left: 0.5rem;
+  color: rgb(24, 24, 24);
+  font-family: 'Pretendard';
+  font-weight: 400;
 `;
 
+// Edited / 너비를 760px로 제한하고 중앙 정렬
 const ReviewCard = styled.div`
-  padding: 1.5rem 0;
-  border-bottom: 1px solid #e5e5e5;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  
+  padding: 2rem 0;
+  border-bottom: 1px solid rgba(24, 24, 24, 0.05);
   
   &:last-child {
     border-bottom: none;
@@ -435,16 +471,14 @@ const ReviewCard = styled.div`
 
 const ReviewHeader = styled.div`
   display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-`;
-
-const ReviewerImage = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 `;
 
 const ReviewerInfo = styled.div`
@@ -455,26 +489,78 @@ const ReviewerInfo = styled.div`
 
 const ReviewerName = styled.span`
   font-size: 0.875rem;
-  font-weight: 700;
-  color: #000;
+  font-weight: 400;
+  color: rgb(24, 24, 24);
+  font-family: 'Pretendard';
 `;
 
 const ReviewDate = styled.span`
   font-size: 0.75rem;
-  color: #666;
+  color: rgb(24, 24, 24);
+  opacity: 0.6;
+`;
+
+const ReviewRatingTitle = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 `;
 
 const ReviewRating = styled.div`
-  color: #fbbf24;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
+  display: flex;
+  gap: 2px;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+`;
+
+const ReviewTitle = styled.p`
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(24, 24, 24);
+  margin: 0;
 `;
 
 const ReviewText = styled.p`
   font-size: 0.875rem;
   line-height: 1.6;
-  color: #000;
+  color: rgb(24, 24, 24);
+  margin: 0;
+  white-space: pre-wrap;
 `;
+
+const EmptyReviews = styled.div`
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+  font-size: 0.875rem;
+`;
+
+const StarIcon = ({ filled }) => (
+  <svg 
+    width="18" 
+    height="18" 
+    viewBox="0 0 33 33" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ transform: 'scale(1.2, 1.2)' }}
+  >
+    <defs>
+      <linearGradient id={`star_gradient_${Math.random()}`}>
+        <stop offset={filled ? "100%" : "0%"} stopColor="rgba(252,192,7,1)" />
+        <stop offset={filled ? "100%" : "0%"} stopColor="#FFFFFF" stopOpacity="1" />
+      </linearGradient>
+    </defs>
+    <path 
+      d="M17.0919 25.4549L16.8335 25.299L16.5751 25.4549L7.39263 30.9971L9.82942 20.5516L9.89798 20.2577L9.66988 20.0601L1.55658 13.0315L12.2393 12.1252L12.5397 12.0997L12.6574 11.8221L16.8335 1.9688L21.0096 11.8221L21.1273 12.0997L21.4277 12.1252L32.1104 13.0315L23.9971 20.0601L23.769 20.2577L23.8376 20.5516L26.2744 30.9971L17.0919 25.4549Z" 
+      stroke="rgba(252,192,7,1)" 
+      fill={filled ? "rgba(252,192,7,1)" : "#FFFFFF"}
+    />
+  </svg>
+);
 
 export const ProductDetail = () => {
   const { productId } = useParams();
@@ -485,6 +571,9 @@ export const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const [avgRating, setAvgRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -512,6 +601,23 @@ export const ProductDetail = () => {
 
     if (productId) {
       fetchProduct();
+    }
+  }, [productId]);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const data = await getProductReviews(productId);
+        setReviews(data.reviews || []);
+        setAvgRating(data.avgRating || 0);
+        setReviewCount(data.totalCount || 0);
+      } catch (err) {
+        console.error('리뷰 로딩 실패:', err);
+      }
+    };
+
+    if (productId) {
+      fetchReviews();
     }
   }, [productId]);
 
@@ -552,11 +658,31 @@ export const ProductDetail = () => {
   const discountedPrice = product.originalPrice * (1 - product.discountRate);
 
   // 사이즈 데이터
-  const allSizes = [230, 235, 240, 245, 250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300, 305, 310, 315, 320];
+  const allSizes = [250, 255, 260, 265, 270, 275, 280, 285, 290, 295, 300, 305, 310, 315, 320];
   const availableSizes = product.sizes || [];
+  
+  // 재고 데이터 (사이즈별 재고)
+  const stockMap = product.stock || {};
+  
+  // 사이즈별 재고 확인 함수
+  const getStock = (size) => {
+    return stockMap[String(size)] ?? 0;
+  };
+  
+  // 사이즈가 구매 가능한지 (재고 > 0)
+  const isSizeAvailable = (size) => {
+    return availableSizes.includes(size) && getStock(size) > 0;
+  };
 
   const handleAddToCart = () => {
     if (!selectedSize) return;
+    
+    // 선택한 사이즈의 재고 확인
+    const currentStock = getStock(selectedSize);
+    if (currentStock <= 0) {
+      alert('선택하신 사이즈는 품절입니다.');
+      return;
+    }
 
     const productImages = product.images || [];
     const mainImage = productImages[selectedColor] || productImages[0];
@@ -568,18 +694,20 @@ export const ProductDetail = () => {
       discountRate: product.discountRate,
       selectedSize: selectedSize,
       imageUrl: mainImage?.url || '/img/default-product.png',
+      stock: currentStock, // 현재 재고 정보 전달
     });
   };
 
   return (
-    <PageContainer>
-      <Breadcrumb>
-        <BreadcrumbLink href="/">홈</BreadcrumbLink>
-        <span>/</span>
-        <BreadcrumbLink href="/collections/mens-off">남성</BreadcrumbLink>
-        <span>/</span>
-        <span>{product.name}</span>
-      </Breadcrumb>
+    <PageWrapper>
+      <PageContainer>
+        <Breadcrumb>
+          <BreadcrumbLink href="/">홈</BreadcrumbLink>
+          <span>/</span>
+          <BreadcrumbLink href="/collections/mens-off">남성</BreadcrumbLink>
+          <span>/</span>
+          <span>{product.name}</span>
+        </Breadcrumb>
 
       <ProductContainer>
         <LeftSection>
@@ -742,16 +870,21 @@ export const ProductDetail = () => {
               <span>사이즈</span>
             </SelectorLabel>
             <SizeOptions>
-              {allSizes.map((size) => (
-                <SizeOption
-                  key={size}
-                  $selected={selectedSize === size}
-                  onClick={() => availableSizes.includes(size) && setSelectedSize(size)}
-                  disabled={!availableSizes.includes(size)}
-                >
-                  {size}
-                </SizeOption>
-              ))}
+              {allSizes.map((size) => {
+                const stock = getStock(size);
+                const isAvailable = isSizeAvailable(size);
+                return (
+                  <SizeOption
+                    key={size}
+                    $selected={selectedSize === size}
+                    onClick={() => isAvailable && setSelectedSize(size)}
+                    disabled={!isAvailable}
+                    title={isAvailable ? `재고: ${stock}개` : '품절'}
+                  >
+                    {size}
+                  </SizeOption>
+                );
+              })}
             </SizeOptions>
           </SizeSelector>
 
@@ -780,43 +913,46 @@ export const ProductDetail = () => {
 
       <ReviewsSection>
         <ReviewsHeader>
-          <Rating>
-            <Stars>★★★★★</Stars>
-            <RatingText>5</RatingText>
-          </Rating>
-          <ReviewCount>총 2,847개 리뷰</ReviewCount>
+          <RatingSection>
+            <RatingScore>{avgRating > 0 ? avgRating.toFixed(1) : '0.0'}</RatingScore>
+            <RatingDetails>
+              <Stars>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <StarIcon key={star} filled={star <= Math.round(avgRating)} />
+                ))}
+              </Stars>
+              <ReviewCount>{reviewCount}건의 리뷰 분석 결과입니다.</ReviewCount>
+            </RatingDetails>
+          </RatingSection>
         </ReviewsHeader>
 
-        <ReviewCard>
-          <ReviewHeader>
-            <ReviewerImage src="/img/10.avif" alt="Reviewer" />
-            <ReviewerInfo>
-              <ReviewerName>김**</ReviewerName>
-              <ReviewDate>2025-10-25</ReviewDate>
-            </ReviewerInfo>
-          </ReviewHeader>
-          <ReviewRating>★★★★★</ReviewRating>
-          <ReviewText>
-            정말로 가볍고 착용감이 너무 좋아요. 오랫동안 신어도 발이 편하고, 
-            디자인도 깔끔해서 어떤 옷과도 잘 어울립니다. 강력 추천합니다!
-          </ReviewText>
-        </ReviewCard>
-
-        <ReviewCard>
-          <ReviewHeader>
-            <ReviewerImage src="/img/11.avif" alt="Reviewer" />
-            <ReviewerInfo>
-              <ReviewerName>이**</ReviewerName>
-              <ReviewDate>2025-10-18</ReviewDate>
-            </ReviewerInfo>
-          </ReviewHeader>
-          <ReviewRating>★★★★★</ReviewRating>
-          <ReviewText>
-            통기성이 뛰어나고 가벼워서 여름에 신기 정말 좋아요. 
-            세탁도 쉽게 할 수 있어서 관리하기 편합니다.
-          </ReviewText>
-        </ReviewCard>
+        {reviews.length === 0 ? (
+          <EmptyReviews>
+            아직 작성된 리뷰가 없습니다.
+          </EmptyReviews>
+        ) : (
+          reviews.map((review) => (
+            <ReviewCard key={review._id}>
+              <ReviewHeader>
+                <ReviewerInfo>
+                  <ReviewerName>{review.displayName}</ReviewerName>
+                </ReviewerInfo>
+                <ReviewDate>게시일 {new Date(review.createdAt).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '-').replace('.', '')}</ReviewDate>
+              </ReviewHeader>
+              <ReviewRatingTitle>
+                <ReviewRating>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <StarIcon key={star} filled={star <= review.rating} />
+                  ))}
+                </ReviewRating>
+                <ReviewTitle>리뷰</ReviewTitle>
+              </ReviewRatingTitle>
+              <ReviewText>{review.content}</ReviewText>
+            </ReviewCard>
+          ))
+        )}
       </ReviewsSection>
-    </PageContainer>
+      </PageContainer>
+    </PageWrapper>
   );
 };

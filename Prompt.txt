@@ -1,0 +1,41 @@
+# Role
+Act as a Senior Frontend Developer specializing in React.
+(당신은 React를 전문으로 하는 시니어 프론트엔드 개발자입니다.)
+
+# Task
+Perform "Clone Coding" of the provided website URL using **React (Vite)**.
+Replicate the visual design and layout as closely as possible to the original.
+(제공된 웹사이트 URL을 React(Vite)를 사용하여 클론 코딩하세요. 디자인과 레이아웃을 원본과 최대한 동일하게 복제하세요.)
+
+# Target URL
+https://allbirds.co.kr/collections/mens-off
+
+# Tech Stack & Constraints (기술 스택 및 제약사항)
+1. **Framework:** Use **React** with **Vite**.
+2. **Styling:** Use **Pure CSS** (e.g., CSS Modules or standard `.css`). Do NOT use external UI frameworks like Tailwind CSS, Bootstrap, or Material UI.
+   (스타일링: 순수 CSS를 사용하세요. 테일윈드, 부트스트랩 등 외부 UI 프레임워크 사용 금지.)
+3. **Links:** Set all `href` attributes for external links to `#` to prevent navigation.
+   (링크: 외부로 연결되는 모든 링크는 `#`으로 처리하세요.)
+
+# Modification Requirements (수정 요구사항)
+You must apply the following changes from the original site:
+(원본 사이트에서 다음 변경 사항을 반드시 적용해야 합니다.)
+
+## 1. Navigation / Header
+- Remove the **'Function' (기능)** and **'Model' (모델)** tabs from the menu.
+  ('기능'과 '모델' 탭을 메뉴에서 제거하세요.)
+
+## 2. Product List Page (Target URL Content)
+- **Categories to Display:** Handle only the following 4 categories:
+  1. 신제품
+  2. 라이프스타일
+  3. 세일
+  4. 슬립온
+- **Filtering Feature:** Implement filter buttons at the top. When clicked, display only the products matching the selected category. Use React State for this functionality.
+  (필터링 기능: 상단에 버튼을 구현하여 클릭 시 해당 카테고리 상품만 보이게 하세요. React State를 사용하세요.)
+- **Section Removal:** Completely remove the **"Discount All: Real-time Popular Items" (할인 전체: 실시간 인기 항목)** section from the product list.
+  ('할인 전체: 실시간 인기 항목' 섹션을 완전히 제거하세요.)
+
+# Goal
+Provide the complete project structure and code files (`App.jsx`, `main.jsx`, `App.css`, etc.) needed to run this project immediately.
+(이 프로젝트를 즉시 실행할 수 있도록 전체 프로젝트 구조와 코드 파일들을 제공하세요.)

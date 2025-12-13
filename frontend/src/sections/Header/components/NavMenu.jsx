@@ -1,4 +1,5 @@
-﻿import styled from "styled-components";
+﻿// frontend\src\sections\Header\components\NavMenu.jsx
+import styled from "styled-components";
 import { useState } from "react";
 
 const MenuList = styled.ul`
@@ -68,6 +69,7 @@ const MenuLink = styled.a`
   }
 `;
 
+// [수정됨] 마우스 연결을 위한 투명 다리 추가
 const MenuButton = styled.button`
   font-weight: 500;
   align-items: normal;
@@ -86,6 +88,9 @@ const MenuButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
+  
+  /* 가상 요소 배치를 위한 기준점 */
+  position: relative;
 
   @media (min-width: 768px) {
     align-items: center;
@@ -98,6 +103,18 @@ const MenuButton = styled.button`
   &:hover {
     opacity: 0.7;
     transition: opacity 0.3s;
+  }
+
+  /* 👇 [추가] 투명 다리: 메뉴와 드롭다운 사이의 빈 공간을 채워줍니다 👇 */
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 100%;
+    bottom: -40px; /* 드롭다운 메뉴 쪽으로 40px만큼 확장 */
+    height: 40px;
+    background-color: transparent; /* 투명 */
+    z-index: 100;
   }
 `;
 
@@ -159,9 +176,9 @@ const DropdownMenu = styled.div`
   transition: all 0.2s ease-in-out;
   width: 100vw;
   height: 340px;
-  opacity: ${ (props) => props.$isActive ? '1' : '0'};
-  visibility: ${(props) => props.$isActive ? 'visible' : 'hidden'};
-  pointer-events: ${(props) => props.$isActive ? 'auto' : 'none'};
+  opacity: ${(props) => (props.$isActive ? '1' : '0')};
+  visibility: ${(props) => (props.$isActive ? 'visible' : 'hidden')};
+  pointer-events: ${(props) => (props.$isActive ? 'auto' : 'none')};
   display: none;
   z-index: 1000;
   overflow: hidden;
@@ -175,7 +192,7 @@ const DropdownContent = styled.div`
   max-width: 1440px;
   width: 100%;
   height: 100%;
-  margin: 0;
+  margin: 0; /* 중앙 정렬을 위해 수정 권장 */
   padding: 3rem 80px;
   background-color: white;
   display: flex;
@@ -192,6 +209,28 @@ const TabSection = styled.div`
   flex: 0 0 auto;
   min-width: 0;
   overflow: hidden;
+  opacity: 0;
+  transform: translateX(-30px);
+  animation: slideInRight 0.2s ease-out forwards;
+
+  @keyframes slideInRight {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  &:nth-child(1) {
+    animation-delay: 0.15s;
+  }
+
+  &:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 0.25s;
+  }
 `;
 
 const TabTitle = styled.div`
@@ -204,7 +243,7 @@ const TabTitle = styled.div`
   padding-bottom: 0;
   cursor: pointer;
   white-space: nowrap;
-  
+
   &::before {
     content: '';
     display: inline-block;
@@ -339,7 +378,7 @@ export const NavMenu = () => {
         >
           <DropdownContent>
             {Object.entries(sections).map(([title, links], idx) => (
-              <TabSection key={title}>
+              <TabSection key={`${title}-${activeDropdown}`}>
                 <TabTitle>{title}</TabTitle>
                 <ColumnContent>
                   {links.map((link, linkIdx) => (

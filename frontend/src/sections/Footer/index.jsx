@@ -1,4 +1,6 @@
+// frontend\src\sections\Footer\index.jsx
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 import { FooterFeatures } from "@/sections/Footer/components/FooterFeatures";
 import { FooterLinks } from "@/sections/Footer/components/FooterLinks";
 
@@ -23,9 +25,16 @@ const SpacerSection = styled.section`
 `;
 
 export const Footer = () => {
+  const { pathname } = useLocation();
+
+  // /products/*int(상품 상세 페이지)에서만 
+  const isProductDetailPage = /^\/products\/\d+$/.test(pathname);
+
   return (
     <FooterContainer>
-      <FooterFeatures />
+      {/* 상품 상세(/products/*)에서는 이미지 3개 숨김*/}
+      {!isProductDetailPage && <FooterFeatures />}
+
       <Spacer>
         <SpacerSection />
       </Spacer>

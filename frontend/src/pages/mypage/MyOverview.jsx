@@ -5,6 +5,7 @@ import { getMe } from "@/api/userAPI";
 
 export const MyOverview = () => {
   const [user, setUser] = useState(null);
+  const [isAgreed, setIsAgreed] = useState(false); 
 
   useEffect(() => {
     const fetchMe = async () => {
@@ -19,6 +20,10 @@ export const MyOverview = () => {
     };
     fetchMe();
   }, []);
+
+  const handleCheck = () => {
+  setIsAgreed(!isAgreed);
+  };
 
   const name =
     user?.displayName || user?.loginName || user?.name || "테스트유저";
@@ -69,11 +74,15 @@ export const MyOverview = () => {
         <span>이메일 수신 동의</span>
 
         <CheckWrap>
-          <CheckBox type="checkbox" />
+          <CheckBox 
+            type="checkbox" 
+            checked={isAgreed} 
+            onChange={handleCheck} 
+          />
           <span>동의</span>
         </CheckWrap>
 
-        <ApplyButton disabled>적용</ApplyButton>
+        <ApplyButton disabled={!isAgreed}>적용</ApplyButton>
       </EmailRow>
 
       <EmailNote>
@@ -98,8 +107,6 @@ const Wrapper = styled.div`
 const TopBox = styled.div`
   margin-top: 4px;
   margin-bottom: 24px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid #111;
 `;
 
 const Name = styled.div`
@@ -114,22 +121,25 @@ const LevelPointRow = styled.div`
   border-top: 1px solid #111;
   border-bottom: 1px solid #111;
   font-size: 18px;
+  width: 50%;
+  
 `;
 
 const LeftCol = styled.div`
-  padding: 16px 12px;
-  text-align: left;
+  padding: 9px 12px;
+  text-align: center;
 `;
 
 const RightCol = styled.div`
-  padding: 16px 12px;
-  text-align: right;
+  padding: 9px 12px;
+  text-align: center;
   border-left: 1px solid #111; /* 가운데 세로 구분선 */
 `;
 
 const NextLevelText = styled.p`
   margin: 24px 0 26px;
   font-size: 16px;
+  text-decoration: underline;
 `;
 
 const Underline = styled.u``;
@@ -138,7 +148,7 @@ const GuideList = styled.ul`
   list-style: none;
   padding-left: 0;
   margin: 0 0 30px;
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.85;
 `;
 
@@ -148,7 +158,7 @@ const GuideItem = styled.li`
   padding-left: 20px;
 
   &::before {
-    content: "＊";
+    content: "*";
     position: absolute;
     left: 0;
     top: -1px;
@@ -194,18 +204,38 @@ const CheckWrap = styled.label`
 `;
 
 const CheckBox = styled.input`
-  width: 20px;
-  height: 20px;
+  appearance: none; /* 기본 브라우저 체크박스 숨김 */
+  width: 30px;
+  height: 30px;
+  border: 1px solid #111; /* 테두리 */
+  margin-right: 4px; /* 글자와의 간격 */
+  cursor: pointer;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+
+  /* 체크되었을 때 스타일 */
+  &:checked::after {
+    content: "V";       /* 가상 요소로 'V' 글자 삽입 */
+    font-size: 14px;    /* V 크기 조절 */
+    font-weight: 700;   /* 굵게 */
+    color: #111;        /* V 색상 */
+    line-height: 1;
+  }
 `;
 
 const ApplyButton = styled.button`
   margin-left: auto;
   padding: 14px 96px;
-  background: #ddd;
-  border: none;
-  color: #777;
-  cursor: pointer;
   font-size: 16px;
+  cursor: ${(props) => (props.disabled ? "default" : "pointer")};
+  
+  /* disabled prop에 따라 색상 변경 */
+  background: ${(props) => (props.disabled ? "#ddd" : "#fff")}; 
+  color: ${(props) => (props.disabled ? "#777" : "#111")};
+  border: ${(props) => (props.disabled ? "none" : "1px solid #111")};
 `;
 
 const EmailNote = styled.p`

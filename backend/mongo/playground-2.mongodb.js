@@ -146,6 +146,7 @@ FROM sales
 WHERE year = 2014
 GROUP BY item;
 */
+
 db.sales_summary_2014.find().toArray();
 db.sales_summary_qty_2014.find().toArray();
 

@@ -3,6 +3,11 @@ import { useState, useEffect } from "react";
 import { CollectionProductCard } from "@/components/CollectionProductCard";
 import { getProducts } from "@/api/productApi";
 
+const PageWrapper = styled.div`
+  background-color: #f8f8f8;
+  min-height: 100vh;
+`;
+
 const PageContainer = styled.div`
   max-width: 1440px;
   margin: 0 auto;
@@ -130,8 +135,8 @@ const FilterSidebar = styled.aside`
   left: 0;
   width: 100%;
   height: 100vh;
-  background: white;
-  z-index: 999999999;
+  background: #f8f8f8;
+  z-index: 1048;
   transform: translateY(${props => props.$isOpen ? '0' : '120vh'});
   transition: transform 0.3s;
   overflow-y: scroll;
@@ -702,7 +707,8 @@ export const MensCollection = () => {
   };
 
   return (
-    <PageContainer>
+    <PageWrapper>
+      <PageContainer>
       <Breadcrumb>
         <BreadcrumbLink href="/">Home</BreadcrumbLink>
         <span>›</span>
@@ -735,7 +741,7 @@ export const MensCollection = () => {
           </PathItemActive>
           <PathChildren>
             <PathChildLink 
-              onClick={(e) => { e.preventDefault(); setSelectedCategories(['신제품']); }}
+              onClick={(e) => { e.preventDefault(); handleCategoryToggle('신제품'); }}
               style={{ 
                 cursor: 'pointer', 
                 fontWeight: selectedCategories.includes('신제품') ? '700' : '400',
@@ -745,7 +751,7 @@ export const MensCollection = () => {
               신제품
             </PathChildLink>
             <PathChildLink 
-              onClick={(e) => { e.preventDefault(); setSelectedCategories(['라이프스타일']); }}
+              onClick={(e) => { e.preventDefault(); handleCategoryToggle('라이프스타일'); }}
               style={{ 
                 cursor: 'pointer', 
                 fontWeight: selectedCategories.includes('라이프스타일') ? '700' : '400',
@@ -755,7 +761,7 @@ export const MensCollection = () => {
               라이프스타일
             </PathChildLink>
             <PathChildLink 
-              onClick={(e) => { e.preventDefault(); setSelectedCategories(['세일']); }}
+              onClick={(e) => { e.preventDefault(); handleCategoryToggle('세일'); }}
               style={{ 
                 cursor: 'pointer', 
                 fontWeight: selectedCategories.includes('세일') ? '700' : '400',
@@ -765,7 +771,7 @@ export const MensCollection = () => {
               세일
             </PathChildLink>
             <PathChildLink 
-              onClick={(e) => { e.preventDefault(); setSelectedCategories(['슬립온']); }}
+              onClick={(e) => { e.preventDefault(); handleCategoryToggle('슬립온'); }}
               style={{ 
                 cursor: 'pointer', 
                 fontWeight: selectedCategories.includes('슬립온') ? '700' : '400',
@@ -965,5 +971,6 @@ export const MensCollection = () => {
         </MainContent>
       </ContentWrapper>
     </PageContainer>
+    </PageWrapper>
   );
 };
