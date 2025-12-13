@@ -67,7 +67,7 @@ npm run dev
 | `POST` | `/api/users/login` | 로그인 |
 | `GET` | `/api/users/me` | 내 정보 조회 (로그인 필요) |
 
-### 🛍 Products (상품)
+### Products (상품)
 | Method | Endpoint | Description |
 | :--- | :--- | :--- |
 | `GET` | `/api/products` | 전체 상품 목록 조회 |
