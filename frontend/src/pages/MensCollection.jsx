@@ -657,17 +657,23 @@ export const MensCollection = () => {
         params.category = selectedCategories.join(',');
       }
 
-      // 사이즈 필터 (첫 번째 선택된 사이즈만) - 숫자로 변환
-      if (selectedSizes.length > 0) {
-        params.size = Number(selectedSizes[0]);
-      }
-
+      // 백엔드에서는 사이즈 필터링 없이 모든 데이터 가져오기
       const data = await getProducts(params);
       
-      // 소재 필터링 (프론트엔드에서 처리)
+      // 사이즈 필터링 (프론트엔드에서 AND 연산 처리)
       let filteredData = data;
+      if (selectedSizes.length > 0) {
+        filteredData = filteredData.filter(product => {
+          // 선택된 모든 사이즈를 제품이 보유하고 있어야 함 (AND 연산)
+          return selectedSizes.every(selectedSize => 
+            product.sizes && product.sizes.includes(Number(selectedSize))
+          );
+        });
+      }
+      
+      // 소재 필터링 (프론트엔드에서 처리)
       if (selectedMaterials.length > 0) {
-        filteredData = data.filter(product => 
+        filteredData = filteredData.filter(product => 
           product.materials && product.materials.some(material => 
             selectedMaterials.some(selected => material.includes(selected))
           )
@@ -932,8 +938,8 @@ export const MensCollection = () => {
                         <span>가격 높은 순</span>
                       </SortOption>
                       <SortOption>
-                        <input type="radio" name="sort" id="sort-review" checked={sortBy === 'review'} onChange={() => setSortBy('review')} />
-                        <span>리뷰 많은 순</span>
+                        <input type="radio" name="sort" id="sort-sales" checked={sortBy === 'sales'} onChange={() => setSortBy('sales')} />
+                        <span>판매 많은 순</span>
                       </SortOption>
                     </SortMenu>
                   </SortDropdown>

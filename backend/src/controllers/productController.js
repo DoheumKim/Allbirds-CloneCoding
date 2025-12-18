@@ -23,7 +23,27 @@ export async function getAllProducts(req, res, next) {
     if (category) {
       // 여러 개면 "라이프스타일,슬립온" 이런 식으로 쉼표로 구분
       const categories = category.split(',').map(c => c.trim());
-      filter.categories = { $in: categories };
+      
+      // "세일" 카테고리는 discountRate > 0 조건도 포함
+      if (categories.includes('세일')) {
+        filter.$or = [
+          { categories: { $in: categories } },
+          { discountRate: { $gt: 0 } }
+        ];
+      } 
+      // "신제품" 카테고리는 등록일 기준 7일 이내 상품도 포함
+      else if (categories.includes('신제품')) {
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        
+        filter.$or = [
+          { categories: { $in: categories } },
+          { createdAt: { $gte: sevenDaysAgo } }
+        ];
+      } 
+      else {
+        filter.categories = { $in: categories };
+      }
     }
 
     // 사이즈 필터 : sizes 배열에 포함되는지 체크
@@ -64,6 +84,27 @@ export async function getAllProducts(req, res, next) {
     //  그 외 정렬
     // =====================
 
+    // 가격 정렬은 할인가 기준으로 메모리에서 정렬
+    if (sort === "priceAsc" || sort === "priceDesc") {
+      const products = await Product.find(filter).lean();
+      
+      // 할인가 계산 후 정렬
+      products.forEach(product => {
+        product.discountedPrice = product.originalPrice * (1 - product.discountRate);
+      });
+      
+      if (sort === "priceAsc")
+      {
+        products.sort((a, b) => a.discountedPrice - b.discountedPrice);
+      }
+      else
+      {
+        products.sort((a, b) => b.discountedPrice - a.discountedPrice);
+      }
+      
+      return res.json(products);
+    }
+
     // sort 쿼리가 없거나 다른 값이면 id 순 정렬
     let sortOption = { _id: 1 }; // 기본값
 
@@ -71,14 +112,8 @@ export async function getAllProducts(req, res, next) {
       case "latest":      // 최신 등록순
         sortOption = { createdAt: -1 };
         break;
-      case "priceAsc":    // 가격 낮은순
-        sortOption = { originalPrice: 1 };
-        break;
-      case "priceDesc":   // 가격 높은순
-        sortOption = { originalPrice: -1 };
-        break;
-      case "review":      // 리뷰 많은 순
-        sortOption = { reviewCount: -1 };
+      case "sales":       // 판매 많은 순
+        sortOption = { soldCount: -1 };
         break;
       default:
         // 그대로 _id: 1 사용
