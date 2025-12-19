@@ -12,8 +12,8 @@ import { upload } from "../middleware/uploadMiddleware.js";
 
 const router = Router();
 
-// 상품 등록(관리자) - 이미지 업로드 포함
-router.post("/products", upload.single("image"), createProduct);
+// 상품 등록(관리자) - 여러 이미지 업로드 포함
+router.post("/products", upload.array("images", 10), createProduct);
 
 // 관리자 상품 목록
 router.get("/products", getAdminProducts);

@@ -61,6 +61,7 @@ export async function createProduct(req, res, next) {
       types,
       discountRate,
       sizes,
+      thumbnailIndex,
     } = req.body;
 
     // 필수 필드 검증
@@ -70,15 +71,21 @@ export async function createProduct(req, res, next) {
       });
     }
 
-    // 이미지 파일 확인 (multer로 업로드됨)
-    if (!req.file) {
+    // 이미지 파일 확인 (multer로 여러 개 업로드됨)
+    if (!req.files || req.files.length === 0) {
       return res.status(400).json({ 
-        message: "상품 이미지를 업로드해주세요." 
+        message: "최소 1개 이상의 상품 이미지를 업로드해주세요." 
       });
     }
 
-    // 이미지 URL 생성 (/img/newProduct/filename.jpg)
-    const imageUrl = `/img/newProduct/${req.file.filename}`;
+    // 썸네일 인덱스 (기본값: 0)
+    const thumbIndex = parseInt(thumbnailIndex) || 0;
+
+    // 이미지 URL 배열 생성
+    const imageArray = req.files.map((file, index) => ({
+      url: `/img/newProduct/${file.filename}`,
+      isThumbnail: index === thumbIndex
+    }));
 
     // sizes JSON 파싱
     let parsedSizes = {};
@@ -127,6 +134,15 @@ export async function createProduct(req, res, next) {
       'lifestyle': '라이프스타일'
     };
     const categories = typesArray.map(t => categoryMap[t] || t);
+    
+    // 신제품 자동 추가 (등록일 기준 30일 이내)
+    categories.push('신제품');
+    
+    // 할인율이 있으면 세일 카테고리 자동 추가
+    const discountRateValue = Number(discountRate) / 100 || 0;
+    if (discountRateValue > 0) {
+      categories.push('세일');
+    }
 
     // 소재 매핑
     const materialMap = {
@@ -139,8 +155,8 @@ export async function createProduct(req, res, next) {
       name,
       description,
       originalPrice: Number(price),
-      discountRate: Number(discountRate) / 100 || 0, // % → 0~1 변환
-      images: [{ url: imageUrl, isThumbnail: true }],
+      discountRate: discountRateValue, // % → 0~1 변환
+      images: imageArray, // 여러 이미지 배열
       sizes: sizeArray.sort((a, b) => a - b),
       stock: stockMap,
       materials: [materialText],
